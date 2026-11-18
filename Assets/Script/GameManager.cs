@@ -47,6 +47,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddLife(int amount)
+    {
+        if (State != GameState.Playing) return;
+
+        Lives = Mathf.Min(Lives + amount, 5);
+        Debug.Log("Nyawa: " + Lives);
+    }
+
     void EndGame()
     {
         State = GameState.GameOver;

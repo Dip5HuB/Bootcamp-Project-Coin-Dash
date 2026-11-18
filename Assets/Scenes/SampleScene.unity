@@ -373,6 +373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coinPrefab: {fileID: 413967460437078198, guid: 2c33b2d484288a744a237b8caf2fec5f, type: 3}
   obstaclePrefab: {fileID: 7783638193128420436, guid: 2c8d51c06ff95ef4785ed4ee12c9d26a, type: 3}
+  heartPrefab: {fileID: 2518138707364597758, guid: bc17eaea95915e44ca376b6947e9ffa2, type: 3}
   startInterval: 1.2
   minInterval: 0.45
   startFallSpeed: 3

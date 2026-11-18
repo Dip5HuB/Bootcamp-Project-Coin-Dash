@@ -7,6 +7,7 @@ public class Spawner : MonoBehaviour
     [Header("Prefab")]
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject obstaclePrefab;
+    [SerializeField] private GameObject heartPrefab;
 
 
     [Header("Tingkat Kesulitan")]
@@ -58,7 +59,17 @@ public class Spawner : MonoBehaviour
 
     void SpawnOne(float fallSpeed)
     {
-        GameObject prefab = (Random.value < obstacleChance) ? obstaclePrefab : coinPrefab;
+        GameObject prefab;
+
+        if (Random.value < 0.1f)
+        {
+            prefab = heartPrefab;
+        }
+        else
+        {
+            prefab = (Random.value < obstacleChance) ? obstaclePrefab : coinPrefab;
+        }
+
         if (prefab == null) return;
 
         Vector3 spawnPos = new Vector3(Random.Range(minX, maxX), spawnY, 0f);

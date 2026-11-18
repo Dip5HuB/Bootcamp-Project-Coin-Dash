@@ -55,5 +55,11 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.LoseLife();
             Destroy(other.gameObject);
         }
+
+        else if (other.CompareTag("Heart"))
+        {
+            GameManager.Instance.AddLife(1);
+            Destroy(other.gameObject);
+        }
     }
 }
