@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float keyboardSpeed = 8f;
+    [SerializeField] private float touchFollowSpeed = 20f;
     [SerializeField] private float edgePadding = 0.5f;
 
+    private Camera cam;
     private float minX;
     private float maxX;
 
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         CalculateScreenBounds();
     }
 
@@ -21,15 +25,60 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.Instance.State != GameState.Playing) return;
 
-        float moveX = Input.GetAxis("Horizontal"); 
-        transform.Translate(Vector3.right * moveX * moveSpeed * Time.deltaTime, Space.World);
+        if (!HandlePointerInput())
+        {
+            HandleKeyboardInput();
+        }
 
         ClampPosition();
     }
 
+    bool HandlePointerInput()
+    {
+        Vector2 screenPos;
+
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            {
+                return false;
+            }
+
+            screenPos = touch.position;
+        }
+
+        else if (Input.GetMouseButton(0))
+        {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return false;
+            }
+
+            screenPos = Input.mousePosition;
+        }
+        else
+        {
+            return false;
+        }
+
+        float targetX = cam.ScreenToWorldPoint(screenPos).x;
+        float newX = Mathf.MoveTowards(transform.position.x, targetX, touchFollowSpeed * Time.deltaTime);
+
+        transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+
+        return true;
+    }
+
+    void HandleKeyboardInput()
+    {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        transform.Translate(Vector3.right * moveX * keyboardSpeed * Time.deltaTime, Space.World);
+    }
+
     void CalculateScreenBounds()
     {
-        Camera cam = Camera.main;
         float halfWidth = cam.orthographicSize * cam.aspect;
 
         minX = cam.transform.position.x - halfWidth + edgePadding;

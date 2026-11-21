@@ -167,6 +167,12 @@ public class GameManager : MonoBehaviour
         if (highScoreText != null) highScoreText.text = "Skor Tertinggi: 0";
     }  
 
+    public void QuitGame()
+    {
+        Application.Quit();
+        Debug.Log("Keluar dari permainan.");
+    }
+
     void RefreshHud()
     {
         Level = 1 + Score / 100;
