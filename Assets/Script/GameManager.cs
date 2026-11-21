@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [Header("Referensi UI")]
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
+    [SerializeField] private TMP_Text levelText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text finalScoreText;
     [SerializeField] private TMP_Text highScoreText;
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
     public GameState State { get; private set; }
     public int Score { get; private set; }
     public int Lives { get; private set; }
+    public int Level { get; private set; }
 
     private const string HighScoreKey = "HighScore";
 
@@ -40,6 +42,7 @@ public class GameManager : MonoBehaviour
         State = GameState.Playing;
         Score = 0;
         Lives = startingLives;
+        Level = 1;
     }
 
     void Start()
@@ -98,6 +101,16 @@ public class GameManager : MonoBehaviour
         Debug.Log("Nyawa: " + Lives);
     }
 
+    public void NextLevel()
+    {
+        if (State != GameState.Playing) return;
+
+        Level++;
+        RefreshHud();
+        Debug.Log("Level: " + Level);
+        
+    }
+
     void EndGame()
     {
         State = GameState.GameOver;
@@ -145,12 +158,21 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }   
+    } 
+
+    public void ResetHighScore()
+    {
+        PlayerPrefs.DeleteKey(HighScoreKey);
+        PlayerPrefs.Save();
+        if (highScoreText != null) highScoreText.text = "Skor Tertinggi: 0";
+    }  
 
     void RefreshHud()
     {
+        Level = 1 + Score / 100;
         if (scoreText != null) scoreText.text = "Skor: " + Score;
         if (livesText != null) livesText.text = "Nyawa: " + Lives;
+        if (levelText != null) levelText.text = "Level: " + Level;
     }
         
 }

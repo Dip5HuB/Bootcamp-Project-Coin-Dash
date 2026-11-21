@@ -10,10 +10,19 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip coinClip;
     [SerializeField] private AudioClip hitClip;
     [SerializeField] private AudioClip gameOverClip;
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] [Range(0f, 1f)] private float musicVolume = 0.3f;
 
     void Awake()
     {
-        Instance = this;      
+        Instance = this;
+
+        if (musicSource != null)
+        {
+            musicSource.loop = true;
+            musicSource.volume = musicVolume;
+            musicSource.Play();
+        }
     }
 
     public void PlayCoin()
